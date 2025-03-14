@@ -1,8 +1,8 @@
 import React from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import type { RootState } from './store/index'
-import type { Families } from './store/slice'
-import { change } from './store/slice'
+import type { Families } from './store/Slice'
+import { change, add, remove } from './store/Slice'
 import './assets/styles/global.css'
 
 const App: React.FC = () => {
@@ -13,6 +13,20 @@ const App: React.FC = () => {
         if (key === 'families' && typeof idx === 'number') dispatch(change({ key, idx, name, value }))
         else dispatch(change({ name, value }))
     }
+    const handleAdd = (key: 'families') => {
+        const items: Record<typeof key, Families> = {
+            'families': {
+                name: '',
+                relation: '',
+                pob: '',
+                dob: '',
+                education: '',
+                job: ''
+            },
+        }
+        dispatch(add({ key, item: items[key] }))
+    }
+    const removeItemHandler = (key: 'families', idx: number) => dispatch(remove({ key, idx }))
     return (
         <>
             <header className="bg-[linear-gradient(to_bottom,#213f99,#1f3785)] p-5 text-white">

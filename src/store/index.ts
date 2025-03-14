@@ -1,6 +1,6 @@
 import type { Store } from '@reduxjs/toolkit'
 import { configureStore } from '@reduxjs/toolkit'
-import App from './slice'
+import App from './Slice'
 
 const ReduxStore: Store = configureStore({
     reducer: {
