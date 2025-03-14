@@ -1,35 +1,22 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from './public/vite.svg'
-import './App.css'
+import React from 'react'
+import './assets/styles/global.css'
 
-function App() {
-    const [count, setCount] = useState(0)
-
+const App: React.FC = () => {
     return (
         <>
-            <div>
-                <a href="https://vite.dev" target="_blank">
-                    <img src={viteLogo} className="logo" alt="Vite logo" />
-                </a>
-                <a href="https://react.dev" target="_blank">
-                    <img src={reactLogo} className="logo react" alt="React logo" />
-                </a>
-            </div>
-            <h1>Vite + React</h1>
-            <div className="card">
-                <button onClick={() => setCount((count) => count + 1)}>
-                    count is {count}
-                </button>
-                <p>
-                    Edit <code>src/App.tsx</code> and save to test HMR
-                </p>
-            </div>
-            <p className="read-the-docs">
-                Click on the Vite and React logos to learn more
-            </p>
+            <header className="bg-[linear-gradient(to_bottom,#213f99,#1f3785)] p-5 text-white">
+                <nav className="flex justify-between items-center">
+                    <div className="flex items-center space-x-3">
+                        <img src="" className="w-24 h-24" alt="PT. Material Konstruksi Bangunan" />
+                        <h1 className="text-lg">PT. Material Konstruksi Bangunan</h1>
+                    </div>
+                    <h2 className="text-lg">Application Form</h2>
+                </nav>
+            </header>
+            <main className="w-full py-5">
+                opo iki
+            </main>
         </>
     )
 }
-
 export default App
