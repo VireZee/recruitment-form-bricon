@@ -4,6 +4,12 @@ import type { RootState } from './store/index'
 import './assets/styles/global.css'
 
 const App: React.FC = () => {
+    const dispatch = useDispatch()
+    const appState = useSelector((state: RootState) => state.APP)
+    // const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+    //     const { name, value } = e.target
+    //     dispatch(change({ name, value }))
+    // }
     return (
         <>
             <header className="bg-[linear-gradient(to_bottom,#213f99,#1f3785)] p-5 text-white">
@@ -22,7 +28,7 @@ const App: React.FC = () => {
                         <input
                             type="text"
                             className="w-full sm:w-2/3 p-2 border border-gray-300 rounded focus:ring focus:ring-blue-300"
-                            name="posisi"
+                            name="role"
                             // value={formState.posisi}
                             // onChange={handleChange}
                             required
@@ -36,7 +42,7 @@ const App: React.FC = () => {
                         <input
                             type="text"
                             className="w-full sm:w-2/3 p-2 border border-gray-300 rounded focus:ring focus:ring-blue-300"
-                            name="nama_lengkap"
+                            name="name"
                             // value={formState.nama_lengkap}
                             // onChange={handleChange}
                             required
@@ -47,7 +53,7 @@ const App: React.FC = () => {
                         <input
                             type="text"
                             className="w-full sm:w-2/3 p-2 border border-gray-300 rounded focus:ring focus:ring-blue-300"
-                            name="tempat_lahir"
+                            name="pob"
                             // value={formState.tempat_lahir}
                             // onChange={handleChange}
                             required
@@ -58,7 +64,7 @@ const App: React.FC = () => {
                         <input
                             type="date"
                             className="w-full sm:w-2/3 p-2 border border-gray-300 rounded focus:ring focus:ring-blue-300"
-                            name="tanggal_lahir"
+                            name="dob"
                             // value={}
                             // onChange={handleChange}
                             required
@@ -69,7 +75,7 @@ const App: React.FC = () => {
                         <input
                             type="text"
                             className="w-full sm:w-2/3 p-2 border border-gray-300 rounded focus:ring focus:ring-blue-300"
-                            name="ktp"
+                            name="nin"
                             // value={}
                             // onChange={}
                             required
@@ -80,7 +86,7 @@ const App: React.FC = () => {
                         <input
                             type="text"
                             className="w-full sm:w-2/3 p-2 border border-gray-300 rounded focus:ring focus:ring-blue-300"
-                            name="ktp"
+                            name="license_c"
                             // value={}
                             // onChange={}
                             required
@@ -91,7 +97,7 @@ const App: React.FC = () => {
                         <input
                             type="text"
                             className="w-full sm:w-2/3 p-2 border border-gray-300 rounded focus:ring focus:ring-blue-300"
-                            name="ktp"
+                            name="license_a"
                             // value={}
                             // onChange={}
                             required
@@ -102,7 +108,7 @@ const App: React.FC = () => {
                         <input
                             type="text"
                             className="w-full sm:w-2/3 p-2 border border-gray-300 rounded focus:ring focus:ring-blue-300"
-                            name="ktp"
+                            name="tin"
                             // value={}
                             // onChange={}
                             required
@@ -111,53 +117,43 @@ const App: React.FC = () => {
                     <div className="flex flex-col sm:flex-row my-4">
                         <label className="w-full sm:w-1/3 font-medium">Kewarganegaraan</label>
                         <div className="w-full sm:w-2/3 flex gap-4">
-                            <label className="flex items-center">
-                                <input type="radio" className="mr-2" name="wn" value="WNI" required />
-                                WNI
-                            </label>
-                            <label className="flex items-center">
-                                <input type="radio" className="mr-2" name="wn" value="WNA" required />
-                                WNA
-                            </label>
+                            {['WNI', 'WNA'].map(citizenship => (
+                                <label key={citizenship} className="flex items-center">
+                                    <input type="radio" className="mr-2" name="citizenship" value={citizenship} required />
+                                    {citizenship}
+                                </label>
+                            ))}
                         </div>
                     </div>
                     <div className="flex flex-col sm:flex-row my-4">
                         <label className="w-full sm:w-1/3 font-medium">Jenis Kelamin</label>
                         <div className="w-full sm:w-2/3 flex gap-4">
-                            <label className="flex items-center">
-                                <input type="radio" className="mr-2" name="gender" value="Laki - Laki" required />
-                                Laki - Laki
-                            </label>
-                            <label className="flex items-center">
-                                <input type="radio" className="mr-2" name="gender" value="Perempuan" required />
-                                Perempuan
-                            </label>
+                            {['Laki - Laki', 'Perempuan'].map(gender => (
+                                <label key={gender} className="flex items-center">
+                                    <input type="radio" className="mr-2" name="gender" value={gender} required />
+                                    {gender}
+                                </label>
+                            ))}
                         </div>
                     </div>
                     <div className="flex flex-col sm:flex-row my-4">
                         <label className="w-full sm:w-1/3 font-medium">Status</label>
                         <div className="w-full sm:w-2/3 flex gap-4 flex-wrap">
-                            <label className="flex items-center">
-                                <input type="radio" className="mr-2" name="status" value="Menikah" required />
-                                Menikah
-                            </label>
-                            <label className="flex items-center">
-                                <input type="radio" className="mr-2" name="status" value="Lajang" required />
-                                Lajang
-                            </label>
-                            <label className="flex items-center">
-                                <input type="radio" className="mr-2" name="status" value="Cerai" required />
-                                Cerai
-                            </label>
+                            {['Menikah', 'Lajang', 'Cerai'].map(marital_status => (
+                                <label key={marital_status} className="flex items-center">
+                                    <input type="radio" className="mr-2" name="marital_status" value={marital_status} required />
+                                    {marital_status}
+                                </label>
+                            ))}
                         </div>
                     </div>
                     <div className="flex flex-col sm:flex-row my-4">
                         <label className="w-full sm:w-1/3 font-medium">Agama</label>
                         <div className="w-full sm:w-2/3 flex gap-4 flex-wrap">
-                            {["Islam", "Kristen", "Katolik", "Buddha", "Hindu", "Konghuchu", "Lainnya"].map((agama) => (
-                                <label key={agama} className="flex items-center">
-                                    <input type="radio" className="mr-2" name="agama" value={agama} required />
-                                    {agama}
+                            {["Islam", "Kristen", "Katolik", "Buddha", "Hindu", "Konghuchu", "Lainnya"].map(religion => (
+                                <label key={religion} className="flex items-center">
+                                    <input type="radio" className="mr-2" name="agama" value={religion} required />
+                                    {religion}
                                 </label>
                             ))}
                         </div>
@@ -220,6 +216,9 @@ const App: React.FC = () => {
                             <span className="bg-gray-200 text-gray-700 px-3 py-2 rounded-r">kg</span>
                         </div>
                     </div>
+                    <h2 className="text-[21px] text-white py-1.5 px-4 bg-[#337ab7] border border-[#2e6da4]">
+                        II. DATA ANGGOTA KELUARGA (TERMASUK ANDA)
+                    </h2>
                 </form>
             </main>
         </>
