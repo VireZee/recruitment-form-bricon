@@ -2,19 +2,16 @@ import React from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import type { RootState } from './store/index'
 import type { Families } from './store/slice'
-import { change, itemChange } from './store/slice'
+import { change } from './store/slice'
 import './assets/styles/global.css'
 
 const App: React.FC = () => {
     const dispatch = useDispatch()
     const appState = useSelector((state: RootState) => state.APP)
-    const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const handleChange = (e: React.ChangeEvent<HTMLInputElement>, key?: 'families', idx?: number) => {
         const { name, value } = e.target
-        dispatch(change({ name, value }))
-    }
-    const itemChangeHandler = (key: 'families', e: React.ChangeEvent<HTMLInputElement>, idx: number) => {
-        const { name, value } = e.target
-        dispatch(itemChange({ key, idx, name: name as keyof Families, value }))
+        if (key === 'families' && typeof idx === 'number') dispatch(change({ key, idx, name, value }))
+        else dispatch(change({ name, value }))
     }
     return (
         <>
@@ -163,7 +160,7 @@ const App: React.FC = () => {
                             ))}
                         </div>
                     </div>
-                    <div className="flex flex-col sm:flex-row my-4">
+                    <div className="my-4 flex flex-col sm:flex-row items-start sm:items-center">
                         <label className="w-full sm:w-1/3 font-medium">Alamat Sesuai KTP</label>
                         <input
                             type="text"
@@ -174,7 +171,7 @@ const App: React.FC = () => {
                             required
                         />
                     </div>
-                    <div className="flex flex-col sm:flex-row my-4">
+                    <div className="my-4 flex flex-col sm:flex-row items-start sm:items-center">
                         <label className="w-full sm:w-1/3 font-medium">Alamat Saat Ini</label>
                         <input
                             type="text"
@@ -185,7 +182,7 @@ const App: React.FC = () => {
                             required
                         />
                     </div>
-                    <div className="flex flex-col sm:flex-row my-4">
+                    <div className="my-4 flex flex-col sm:flex-row items-start sm:items-center">
                         <label className="w-full sm:w-1/3 font-medium">Email</label>
                         <input
                             type="email"
@@ -196,7 +193,7 @@ const App: React.FC = () => {
                             required
                         />
                     </div>
-                    <div className="flex flex-col sm:flex-row my-4">
+                    <div className="my-4 flex flex-col sm:flex-row items-start sm:items-center">
                         <label className="w-full sm:w-1/3 font-medium">No. Telepon / HP</label>
                         <div className="w-full sm:w-2/3 flex">
                             <span className="bg-gray-200 text-gray-700 px-3 py-2 rounded-l">+62</span>
@@ -211,7 +208,7 @@ const App: React.FC = () => {
                             />
                         </div>
                     </div>
-                    <div className="flex flex-col sm:flex-row my-4">
+                    <div className="my-4 flex flex-col sm:flex-row items-start sm:items-center">
                         <label className="w-full sm:w-1/3 font-medium">Tinggi Badan</label>
                         <div className="w-full sm:w-2/3 flex">
                             <input
@@ -225,7 +222,7 @@ const App: React.FC = () => {
                             <span className="bg-gray-200 text-gray-700 px-3 py-2 rounded-r">cm</span>
                         </div>
                     </div>
-                    <div className="flex flex-col sm:flex-row my-4">
+                    <div className="my-4 flex flex-col sm:flex-row items-start sm:items-center">
                         <label className="w-full sm:w-1/3 font-medium">Berat Badan</label>
                         <div className="w-full sm:w-2/3 flex">
                             <input
@@ -250,7 +247,7 @@ const App: React.FC = () => {
                                 name="name"
                                 value={family.name}
                                 placeholder="Nama"
-                                onChange={e => itemChangeHandler('families', e, idx)}
+                                onChange={e => handleChange(e, 'families', idx)}
                                 required
                             />
                             <input
@@ -259,7 +256,7 @@ const App: React.FC = () => {
                                 name="relation"
                                 value={family.relation}
                                 placeholder="Hubungan"
-                                onChange={e => itemChangeHandler('families', e, idx)}
+                                onChange={e => handleChange(e, 'families', idx)}
                                 required
                             />
                             <input
@@ -268,7 +265,7 @@ const App: React.FC = () => {
                                 name="pob"
                                 value={family.pob}
                                 placeholder="Tempat Lahir"
-                                onChange={e => itemChangeHandler('families', e, idx)}
+                                onChange={e => handleChange(e, 'families', idx)}
                             />
                             <input
                                 type={family.dob ? "date" : "text"}
@@ -277,10 +274,8 @@ const App: React.FC = () => {
                                 value={family.dob}
                                 placeholder="Tanggal Lahir"
                                 onFocus={e => e.target.type = "date"}
-                                onBlur={e => {
-                                    if (!family.dob) e.target.type = "text"
-                                }}
-                                onChange={e => itemChangeHandler('families', e, idx)}
+                                onBlur={e => family.dob ? e.target.type = "date" : e.target.type = "text"}
+                                onChange={e => handleChange(e, 'families', idx)}
                             />
                             <input
                                 type="text"
@@ -288,7 +283,7 @@ const App: React.FC = () => {
                                 name="education"
                                 value={family.education}
                                 placeholder="Pendidikan"
-                                onChange={e => itemChangeHandler('families', e, idx)}
+                                onChange={e => handleChange(e, 'families', idx)}
                                 required
                             />
                             <input
@@ -297,7 +292,7 @@ const App: React.FC = () => {
                                 name="job"
                                 value={family.job}
                                 placeholder="Pekerjaan"
-                                onChange={e => itemChangeHandler('families', e, idx)}
+                                onChange={e => handleChange(e, 'families', idx)}
                                 required
                             />
                             {appState.families.length > 1 && (
@@ -311,6 +306,15 @@ const App: React.FC = () => {
                             )}
                         </div>
                     ))}
+                    <div className="flex justify-center sm:justify-end my-3">
+                        <button
+                            type="button"
+                            className="bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600 transition duration-200"
+                        // onClick={() => addItemHandler('families')}
+                        >
+                            Tambah
+                        </button>
+                    </div>
                 </form>
             </main>
         </>

@@ -47,13 +47,11 @@ const App = createSlice({
     name: 'REG',
     initialState,
     reducers: {
-        change: (state, { payload: { name, value } }: PayloadAction<{ name: keyof State, value: string | number }>) => {
-            state[name] = typeof value === 'number' ? Number(value) : String(value)
-        },
-        itemChange: (state, { payload: { key, idx, name, value } }: PayloadAction<{ key: 'families', idx: number, name: keyof Families, value: string | number }>) => {
-            if (key === 'families') state.families[idx]![name] = String(value)
+        change: (state, { payload: { key, idx, name, value } }: PayloadAction<{ key?: 'families', idx?: number, name: keyof State | keyof Families, value: string | number }>) => {
+            if (key === 'families' && typeof idx === 'number') state.families[idx]![name as keyof Families] = String(value)
+            else state[name] = typeof value === 'number' ? Number(value) : String(value)
         }
     }
 })
-export const { change, itemChange } = App.actions
+export const { change } = App.actions
 export default App.reducer
