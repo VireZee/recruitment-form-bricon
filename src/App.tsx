@@ -277,8 +277,8 @@ const App: React.FC = () => {
                                 value={family.dob}
                                 placeholder="Tanggal Lahir"
                                 onFocus={e => e.target.type = "date"}
-                                onBlur={(e) => {
-                                    if (!family.dob) e.target.type = "text"; // Cek dari state bukan dari input doang
+                                onBlur={e => {
+                                    if (!family.dob) e.target.type = "text"
                                 }}
                                 onChange={e => itemChangeHandler('families', e, idx)}
                             />
