@@ -9,9 +9,18 @@ export interface Families {
     education: string
     job: string
 }
+export interface Academics {
+    education: string
+    institution: string
+    major: string
+    start: string
+    end: string
+    remarks: string
+}
 interface State {
-    [key: string]: string | number | Families[]
+    [key: string]: string | number | Families[] | Academics[]
     families: Families[]
+    academics: Academics[]
 }
 const initialState: State = {
     role: '',
@@ -42,19 +51,31 @@ const initialState: State = {
             job: ''
         }
     ],
+    academics: [
+        {
+            education: '',
+            institution: '',
+            major: '',
+            start: '',
+            end: '',
+            remarks: ''
+        }
+    ]
 }
 const App = createSlice({
     name: 'APP',
     initialState,
     reducers: {
-        change: (state, { payload: { key, idx, name, value } }: PayloadAction<{ key?: 'families', idx?: number, name: keyof State | keyof Families, value: string | number }>) => {
+        change: (state, { payload: { key, idx, name, value } }: PayloadAction<{ key?: 'families' | 'academics', idx?: number, name: keyof State | keyof Families, value: string | number }>) => {
             if (key === 'families' && typeof idx === 'number') state.families[idx]![name as keyof Families] = String(value)
+            else if (key === 'academics' && typeof idx === 'number') state.academics[idx]![name as keyof Academics] = String(value)
             else state[name as keyof State] = typeof value === 'number' ? Number(value) : String(value)
         },
-        add: (state, { payload: { key, item } }: PayloadAction<{ key: 'families', item: Families }>) => {
-            if (key === 'families') state.families.push(item)
+        add: (state, { payload: { key, item } }: PayloadAction<{ key: 'families' | 'academics', item: Families | Academics }>) => {
+            if (key === 'families') state.families.push(item as Families)
+            else if (key === 'academics') state.academics.push(item as Academics)
         },
-        remove: (state, { payload: { key, idx } }: PayloadAction<{ key: 'families', idx: number }>) => {
+        remove: (state, { payload: { key, idx } }: PayloadAction<{ key: 'families' | 'academics', idx: number }>) => {
             state[key].splice(idx, 1)
         }
     }

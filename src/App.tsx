@@ -1,20 +1,20 @@
 import React from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import type { RootState } from './store/index'
-import type { Families } from './store/Slice'
+import type { Families, Academics } from './store/Slice'
 import { change, add, remove } from './store/Slice'
 import './assets/styles/global.css'
 
 const App: React.FC = () => {
     const dispatch = useDispatch()
     const appState = useSelector((state: RootState) => state.APP)
-    const handleChange = (e: React.ChangeEvent<HTMLInputElement>, key?: 'families', idx?: number) => {
+    const handleChange = (e: React.ChangeEvent<HTMLInputElement>, key?: 'families' | 'academics', idx?: number) => {
         const { name, value } = e.target
-        if (key === 'families' && typeof idx === 'number') dispatch(change({ key, idx, name, value }))
+        if (key && typeof idx === 'number') dispatch(change({ key, idx, name, value }))
         else dispatch(change({ name, value }))
     }
-    const handleAdd = (key: 'families') => {
-        const items: Record<typeof key, Families> = {
+    const handleAdd = (key: 'families' | 'academics') => {
+        const items: Record<typeof key, Families | Academics> = {
             'families': {
                 name: '',
                 relation: '',
@@ -23,10 +23,18 @@ const App: React.FC = () => {
                 education: '',
                 job: ''
             },
+            'academics': {
+                education: '',
+                institution: '',
+                major: '',
+                start: '',
+                end: '',
+                remarks: ''
+            }
         }
         dispatch(add({ key, item: items[key] }))
     }
-    const removeItemHandler = (key: 'families', idx: number) => dispatch(remove({ key, idx }))
+    const removeItemHandler = (key: 'families' | 'academics', idx: number) => dispatch(remove({ key, idx }))
     return (
         <>
             <header className="bg-[linear-gradient(to_bottom,#213f99,#1f3785)] p-5 text-white">
@@ -313,7 +321,7 @@ const App: React.FC = () => {
                                 <button
                                     type="button"
                                     className="bg-red-500 text-white px-3 py-2 rounded hover:bg-red-600 transition duration-200 text-sm"
-                                // onClick={() => removeItemHandler('keluarga', idx)}
+                                    onClick={() => removeItemHandler('families', idx)}
                                 >
                                     Hapus
                                 </button>
@@ -324,7 +332,85 @@ const App: React.FC = () => {
                         <button
                             type="button"
                             className="bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600 transition duration-200"
-                        // onClick={() => addItemHandler('families')}
+                            onClick={() => handleAdd('families')}
+                        >
+                            Tambah
+                        </button>
+                    </div>
+                    <h2 className="text-[21px] text-white py-1.5 px-4 bg-[#337ab7] border border-[#2e6da4]">
+                        III. DATA PENDIDIKAN FORMAL DAN NON-FORMAL
+                    </h2>
+                    {appState.academics.map((academy: Academics, idx: number) => (
+                        <div key={idx} className="flex flex-col sm:flex-row gap-3 my-4">
+                            <input
+                                type="text"
+                                className="w-full sm:w-1/5 p-2 border border-gray-300 rounded focus:ring focus:ring-blue-300"
+                                name="education"
+                                value={academy.education}
+                                placeholder="Tingkat Pendidikan"
+                                onChange={e => handleChange(e, 'academics', idx)}
+                                required
+                            />
+                            <input
+                                type="text"
+                                className="w-full sm:w-1/5 p-2 border border-gray-300 rounded focus:ring focus:ring-blue-300"
+                                name="institution"
+                                value={academy.institution}
+                                placeholder="Nama Institusi"
+                                onChange={e => handleChange(e, 'academics', idx)}
+                                required
+                            />
+                            <input
+                                type="text"
+                                className="w-full sm:w-1/5 p-2 border border-gray-300 rounded focus:ring focus:ring-blue-300"
+                                name="major"
+                                value={academy.major}
+                                placeholder="Jurusan"
+                                onChange={e => handleChange(e, 'academics', idx)}
+                            />
+                            <input
+                                type="text"
+                                className="w-full sm:w-1/5 p-2 border border-gray-300 rounded focus:ring focus:ring-blue-300"
+                                name="start"
+                                value={academy.start}
+                                placeholder="Tahun Masuk"
+                                onChange={e => handleChange(e, 'academics', idx)}
+                                required
+                            />
+                            <input
+                                type="text"
+                                className="w-full sm:w-1/5 p-2 border border-gray-300 rounded focus:ring focus:ring-blue-300"
+                                name="end"
+                                value={academy.end}
+                                placeholder="Tahun Lulus"
+                                onChange={e => handleChange(e, 'academics', idx)}
+                                required
+                            />
+                            <input
+                                type="text"
+                                className="w-full sm:w-1/5 p-2 border border-gray-300 rounded focus:ring focus:ring-blue-300"
+                                name="remarks"
+                                value={academy.remarks}
+                                placeholder="Lulus / Tidak Lulus"
+                                onChange={e => handleChange(e, 'academics', idx)}
+                                required
+                            />
+                            {appState.academics.length > 1 && (
+                                <button
+                                    type="button"
+                                    className="bg-red-500 text-white px-3 py-2 rounded hover:bg-red-600 transition duration-200 text-sm"
+                                    onClick={() => removeItemHandler('academics', idx)}
+                                >
+                                    Hapus
+                                </button>
+                            )}
+                        </div>
+                    ))}
+                    <div className="flex justify-center sm:justify-end my-3">
+                        <button
+                            type="button"
+                            className="bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600 transition duration-200"
+                            onClick={() => handleAdd('academics')}
                         >
                             Tambah
                         </button>
