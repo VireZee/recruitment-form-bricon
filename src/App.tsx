@@ -53,8 +53,8 @@ const App: React.FC = () => {
                         <input
                             type="text"
                             className="w-full sm:w-2/3 p-2 border border-gray-300 rounded focus:ring focus:ring-blue-300"
-                            name="role"
-                            value={appState.role}
+                            name="position"
+                            value={appState.position}
                             onChange={handleChange}
                             required
                         />
