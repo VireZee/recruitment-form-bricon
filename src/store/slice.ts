@@ -58,7 +58,7 @@ const initialState: State = {
             major: '',
             start: '',
             end: '',
-            remarks: ''
+            remarks: 'Tidak Lulus'
         }
     ]
 }

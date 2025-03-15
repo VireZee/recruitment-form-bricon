@@ -8,7 +8,7 @@ import './assets/styles/global.css'
 const App: React.FC = () => {
     const dispatch = useDispatch()
     const appState = useSelector((state: RootState) => state.APP)
-    const handleChange = (e: React.ChangeEvent<HTMLInputElement>, key?: 'families' | 'academics', idx?: number) => {
+    const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>, key?: 'families' | 'academics', idx?: number) => {
         const { name, value } = e.target
         if (key && typeof idx === 'number') dispatch(change({ key, idx, name, value }))
         else dispatch(change({ name, value }))
@@ -29,7 +29,7 @@ const App: React.FC = () => {
                 major: '',
                 start: '',
                 end: '',
-                remarks: ''
+                remarks: 'Tidak Lulus'
             }
         }
         dispatch(add({ key, item: items[key] }))
@@ -288,6 +288,7 @@ const App: React.FC = () => {
                                 value={family.pob}
                                 placeholder="Tempat Lahir"
                                 onChange={e => handleChange(e, 'families', idx)}
+                                required
                             />
                             <input
                                 type={family.dob ? "date" : "text"}
@@ -298,6 +299,7 @@ const App: React.FC = () => {
                                 onFocus={e => e.target.type = "date"}
                                 onBlur={e => family.dob ? e.target.type = "date" : e.target.type = "text"}
                                 onChange={e => handleChange(e, 'families', idx)}
+                                required
                             />
                             <input
                                 type="text"
@@ -342,15 +344,26 @@ const App: React.FC = () => {
                     </h2>
                     {appState.academics.map((academy: Academics, idx: number) => (
                         <div key={idx} className="flex flex-col sm:flex-row gap-3 my-4">
-                            <input
-                                type="text"
+                            <select
                                 className="w-full sm:w-1/5 p-2 border border-gray-300 rounded focus:ring focus:ring-blue-300"
                                 name="education"
                                 value={academy.education}
-                                placeholder="Tingkat Pendidikan"
                                 onChange={e => handleChange(e, 'academics', idx)}
                                 required
-                            />
+                            >
+                                <option value="" disabled>Pilih Tingkat Pendidikan</option>
+                                <option value="PELATIHAN">PELATIHAN</option>
+                                <option value="SD">SD</option>
+                                <option value="SMP">SMP</option>
+                                <option value="SMA">SMA</option>
+                                <option value="SMK">SMK</option>
+                                <option value="D1">D1</option>
+                                <option value="D2">D2</option>
+                                <option value="D3">D3</option>
+                                <option value="S1">S1</option>
+                                <option value="S2">S2</option>
+                                <option value="S3">S3</option>
+                            </select>
                             <input
                                 type="text"
                                 className="w-full sm:w-1/5 p-2 border border-gray-300 rounded focus:ring focus:ring-blue-300"
@@ -367,6 +380,7 @@ const App: React.FC = () => {
                                 value={academy.major}
                                 placeholder="Jurusan"
                                 onChange={e => handleChange(e, 'academics', idx)}
+                                required
                             />
                             <input
                                 type="text"
@@ -382,19 +396,20 @@ const App: React.FC = () => {
                                 className="w-full sm:w-1/5 p-2 border border-gray-300 rounded focus:ring focus:ring-blue-300"
                                 name="end"
                                 value={academy.end}
-                                placeholder="Tahun Lulus"
+                                placeholder="Tahun Selesai"
                                 onChange={e => handleChange(e, 'academics', idx)}
                                 required
                             />
-                            <input
-                                type="text"
+                            <select
                                 className="w-full sm:w-1/5 p-2 border border-gray-300 rounded focus:ring focus:ring-blue-300"
                                 name="remarks"
                                 value={academy.remarks}
-                                placeholder="Lulus / Tidak Lulus"
                                 onChange={e => handleChange(e, 'academics', idx)}
                                 required
-                            />
+                            >
+                                <option value="Lulus">Lulus</option>
+                                <option value="Tidak Lulus">Tidak Lulus</option>
+                            </select>
                             {appState.academics.length > 1 && (
                                 <button
                                     type="button"
