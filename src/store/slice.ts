@@ -45,7 +45,7 @@ export interface Emergencies {
     relation: string
     phone: string
 }
-interface State {
+export interface State {
     [key: string]: string | number | Families[] | Academics[] | Experiences[] | Organizations[] | Recommendations[] | Emergencies[]
     families: Families[]
     academics: Academics[]
@@ -157,7 +157,7 @@ const App = createSlice({
             else if (key === 'academics' && typeof idx === 'number') state.academics[idx]![name as keyof Academics] = String(value)
             else state[name as keyof State] = typeof value === 'number' ? Number(value) : String(value)
         },
-        add: <K extends keyof State>(state: State, { payload: { key, item } }: PayloadAction<{ key: K, item: State[K] extends Array<infer U> ? U : never }>) => {
+        add: <K extends keyof State>(state: State, { payload: { key, item } }: PayloadAction<{ key: K, item: Families | Academics }>) => {
             (state[key] as Array<typeof item>).push(item)
         },
         remove: <K extends keyof State>(state: State, { payload: { key, idx } }: PayloadAction<{ key: K, idx: number }>) => {

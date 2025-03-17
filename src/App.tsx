@@ -1,7 +1,7 @@
 import React from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import type { RootState } from './store/index'
-import type { Families, Academics } from './store/Slice'
+import type { State, Families, Academics } from './store/Slice'
 import { change, add, remove } from './store/Slice'
 import './assets/styles/global.css'
 
@@ -13,9 +13,9 @@ const App: React.FC = () => {
         if (key && typeof idx === 'number') dispatch(change({ key, idx, name, value }))
         else dispatch(change({ name, value }))
     }
-    const handleAdd = (key: 'families' | 'academics') => {
-        const items: Record<typeof key, Families | Academics> = {
-            'families': {
+    const handleAdd = <K extends keyof State>(key: K) => {
+        const items = {
+            families: {
                 name: '',
                 relation: '',
                 pob: '',
@@ -23,7 +23,7 @@ const App: React.FC = () => {
                 education: '',
                 job: ''
             },
-            'academics': {
+            academics: {
                 education: '',
                 institution: '',
                 major: '',
@@ -31,10 +31,10 @@ const App: React.FC = () => {
                 end: '',
                 remarks: 'Tidak Lulus'
             }
-        }
+        } as Record<K, Families | Academics>
         dispatch(add({ key, item: items[key] }))
     }
-    const removeItemHandler = (key: 'families' | 'academics', idx: number) => dispatch(remove({ key, idx }))
+    const removeItemHandler = <K extends keyof State>(key: K, idx: number) => dispatch(remove({ key, idx }))
     return (
         <>
             <header className="bg-[linear-gradient(to_bottom,#213f99,#1f3785)] p-5 text-white">
