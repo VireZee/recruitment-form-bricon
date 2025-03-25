@@ -1,5 +1,5 @@
-import { createSlice } from '@reduxjs/toolkit'
 import type { PayloadAction } from '@reduxjs/toolkit'
+import { createSlice } from '@reduxjs/toolkit'
 
 export interface Families {
     name: string
@@ -161,7 +161,9 @@ const App = createSlice({
                 const expKey = name as keyof Experiences
                 if (expKey === 'salary' || expKey === 'subordinates') state.experiences[idx]![expKey] = Number(value)
                 else state.experiences[idx]![expKey] = String(value)
-            }
+            } else if (key === 'organizations' && typeof idx === 'number') state.organizations[idx]![name as keyof Organizations] = String(value)
+            else if (key === 'recommendations' && typeof idx === 'number') state.recommendations[idx]![name as keyof Recommendations] = String(value)
+            else if (key === 'emergencies' && typeof idx === 'number') state.emergencies[idx]![name as keyof Emergencies] = String(value)
         },
         add: <K extends keyof State>(state: State, { payload: { key, item } }: PayloadAction<{ key: K, item: Families | Academics | Experiences | Organizations | Recommendations | Emergencies }>) => {
             (state[key] as Array<typeof item>).push(item)

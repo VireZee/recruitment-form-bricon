@@ -1,14 +1,14 @@
 import React from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import type { RootState } from './store/index'
-import type { State, Families, Academics, Experiences } from './store/Slice'
+import type { State, Families, Academics, Experiences, Organizations, Recommendations, Emergencies } from './store/Slice'
 import { change, add, remove } from './store/Slice'
 import './assets/styles/global.css'
 
 const App: React.FC = () => {
     const dispatch = useDispatch()
     const appState = useSelector((state: RootState) => state.APP)
-    const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>, key?: 'families' | 'academics' | 'experiences', idx?: number) => {
+    const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>, key?: 'families' | 'academics' | 'experiences' | 'organizations' | 'recommendations' | 'emergencies', idx?: number) => {
         const { name, value } = e.target
         if (key && typeof idx === 'number') dispatch(change({ key, idx, name, value }))
         else dispatch(change({ name, value }))
@@ -43,8 +43,24 @@ const App: React.FC = () => {
                 tasks: '',
                 achievement: '',
                 reason: ''
+            },
+            organizations: {
+                name: '',
+                position: '',
+                start: '',
+                end: ''
+            },
+            recommendations: {
+                name: '',
+                position: '',
+                phone: ''
+            },
+            emergencies: {
+                name: '',
+                relation: '',
+                phone: ''
             }
-        } as Record<K, Families | Academics | Experiences>
+        } as Record<K, Families | Academics | Experiences | Organizations | Recommendations | Emergencies>
         dispatch(add({ key, item: items[key] }))
     }
     const removeItemHandler = <K extends keyof State>(key: K, idx: number) => dispatch(remove({ key, idx }))
@@ -333,13 +349,15 @@ const App: React.FC = () => {
                                 required
                             />
                             {appState.families.length > 1 && (
-                                <button
-                                    type="button"
-                                    className="bg-red-500 text-white px-3 py-2 rounded hover:bg-red-600 transition duration-200"
-                                    onClick={() => removeItemHandler('families', idx)}
-                                >
-                                    Hapus
-                                </button>
+                                <div className="flex justify-center">
+                                    <button
+                                        type="button"
+                                        className="bg-red-500 text-white px-3 py-2 rounded hover:bg-red-600 transition duration-200"
+                                        onClick={() => removeItemHandler('families', idx)}
+                                    >
+                                        Hapus
+                                    </button>
+                                </div>
                             )}
                         </div>
                     ))}
@@ -418,13 +436,15 @@ const App: React.FC = () => {
                                 <option value="Tidak Lulus">Tidak Lulus</option>
                             </select>
                             {appState.academics.length > 1 && (
-                                <button
-                                    type="button"
-                                    className="bg-red-500 text-white px-3 py-2 rounded hover:bg-red-600 transition duration-200"
-                                    onClick={() => removeItemHandler('academics', idx)}
-                                >
-                                    Hapus
-                                </button>
+                                <div className="flex justify-center">
+                                    <button
+                                        type="button"
+                                        className="bg-red-500 text-white px-3 py-2 rounded hover:bg-red-600 transition duration-200"
+                                        onClick={() => removeItemHandler('academics', idx)}
+                                    >
+                                        Hapus
+                                    </button>
+                                </div>
                             )}
                         </div>
                     ))}
@@ -584,6 +604,73 @@ const App: React.FC = () => {
                             type="button"
                             className="bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600 transition duration-200"
                             onClick={() => handleAdd('experiences')}
+                        >
+                            Tambah
+                        </button>
+                    </div>
+                    <h2 className="text-[21px] text-white py-1.5 px-4 bg-[#337ab7] border border-[#2e6da4]">
+                        V. NAMA KEGIATAN / ORGANISASI
+                    </h2>
+                    {appState.organizations.map((organization: Organizations, idx: number) => (
+                        <div key={idx} className="flex flex-col sm:flex-row gap-3 my-4">
+                            <input
+                                type="text"
+                                className="w-full sm:w-1/4 p-2 border border-gray-300 rounded focus:ring focus:ring-blue-300"
+                                name="name"
+                                value={organization.name}
+                                placeholder="Nama"
+                                onChange={e => handleChange(e, 'organizations', idx)}
+                                required
+                            />
+                            <input
+                                type="text"
+                                className="w-full sm:w-1/4 p-2 border border-gray-300 rounded focus:ring focus:ring-blue-300"
+                                name="position"
+                                value={organization.position}
+                                placeholder="Jabatan"
+                                onChange={e => handleChange(e, 'organizations', idx)}
+                                required
+                            />
+                            <input
+                                type={organization.start ? "month" : "text"}
+                                className="w-full sm:w-1/4 p-2 border border-gray-300 rounded focus:ring focus:ring-blue-300"
+                                name="start"
+                                value={organization.start}
+                                placeholder="Dari"
+                                onFocus={e => e.target.type = "month"}
+                                onBlur={e => organization.start ? e.target.type = "month" : e.target.type = "text"}
+                                onChange={e => handleChange(e, 'organizations', idx)}
+                                required
+                            />
+                            <input
+                                type={organization.end ? "month" : "text"}
+                                className="w-full sm:w-1/4 p-2 border border-gray-300 rounded focus:ring focus:ring-blue-300"
+                                name="end"
+                                value={organization.end}
+                                placeholder="Sampai"
+                                onFocus={e => e.target.type = "month"}
+                                onBlur={e => organization.end ? e.target.type = "month" : e.target.type = "text"}
+                                onChange={e => handleChange(e, 'organizations', idx)}
+                                required
+                            />
+                            {appState.organizations.length > 1 && (
+                                <div className="flex justify-center">
+                                    <button
+                                        type="button"
+                                        className="bg-red-500 text-white px-3 py-2 rounded hover:bg-red-600 transition duration-200"
+                                        onClick={() => removeItemHandler('organizations', idx)}
+                                    >
+                                        Hapus
+                                    </button>
+                                </div>
+                            )}
+                        </div>
+                    ))}
+                    <div className="flex justify-center sm:justify-end my-3">
+                        <button
+                            type="button"
+                            className="bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600 transition duration-200"
+                            onClick={() => handleAdd('organizations')}
                         >
                             Tambah
                         </button>
