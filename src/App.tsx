@@ -1,14 +1,14 @@
 import React from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import type { RootState } from './store/index'
-import type { State, Families, Academics } from './store/Slice'
+import type { State, Families, Academics, Experiences } from './store/Slice'
 import { change, add, remove } from './store/Slice'
 import './assets/styles/global.css'
 
 const App: React.FC = () => {
     const dispatch = useDispatch()
     const appState = useSelector((state: RootState) => state.APP)
-    const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>, key?: 'families' | 'academics', idx?: number) => {
+    const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>, key?: 'families' | 'academics' | 'experiences', idx?: number) => {
         const { name, value } = e.target
         if (key && typeof idx === 'number') dispatch(change({ key, idx, name, value }))
         else dispatch(change({ name, value }))
@@ -30,8 +30,21 @@ const App: React.FC = () => {
                 start: '',
                 end: '',
                 remarks: 'Tidak Lulus'
+            },
+            experiences: {
+                name: '',
+                industry: '',
+                position: '',
+                salary: 0,
+                supervisor: '',
+                subordinates: 0,
+                start: '',
+                end: '',
+                tasks: '',
+                achievement: '',
+                reason: ''
             }
-        } as Record<K, Families | Academics>
+        } as Record<K, Families | Academics | Experiences>
         dispatch(add({ key, item: items[key] }))
     }
     const removeItemHandler = <K extends keyof State>(key: K, idx: number) => dispatch(remove({ key, idx }))
@@ -352,17 +365,9 @@ const App: React.FC = () => {
                                 required
                             >
                                 <option value="" disabled>Pilih Tingkat Pendidikan</option>
-                                <option value="PELATIHAN">PELATIHAN</option>
-                                <option value="SD">SD</option>
-                                <option value="SMP">SMP</option>
-                                <option value="SMA">SMA</option>
-                                <option value="SMK">SMK</option>
-                                <option value="D1">D1</option>
-                                <option value="D2">D2</option>
-                                <option value="D3">D3</option>
-                                <option value="S1">S1</option>
-                                <option value="S2">S2</option>
-                                <option value="S3">S3</option>
+                                {['PELATIHAN', 'SD', 'SMP', 'SMA', 'SMK', 'D1', 'D2', 'D3', 'S1', 'S2', 'S3'].map(level => (
+                                    <option key={level} value={level}>{level}</option>
+                                ))}
                             </select>
                             <input
                                 type="text"
@@ -383,7 +388,8 @@ const App: React.FC = () => {
                                 required
                             />
                             <input
-                                type="text"
+                                type="number"
+                                min={1900}
                                 className="w-full sm:w-1/5 p-2 border border-gray-300 rounded focus:ring focus:ring-blue-300"
                                 name="start"
                                 value={academy.start}
@@ -392,7 +398,8 @@ const App: React.FC = () => {
                                 required
                             />
                             <input
-                                type="text"
+                                type="number"
+                                min={1900}
                                 className="w-full sm:w-1/5 p-2 border border-gray-300 rounded focus:ring focus:ring-blue-300"
                                 name="end"
                                 value={academy.end}
@@ -430,6 +437,137 @@ const App: React.FC = () => {
                             Tambah
                         </button>
                     </div>
+                    <h2 className="text-[21px] text-white py-1.5 px-4 bg-[#337ab7] border border-[#2e6da4]">
+                        IV. RIWAYAT PEKERJAAN
+                    </h2>
+                    {appState.experiences.map((experience: Experiences, idx: number) => (
+                        <div key={idx}>
+                            <div className="my-4 flex flex-col sm:flex-row gap-y-2 sm:gap-y-0 items-start sm:items-center">
+                                <label className="w-full sm:w-1/3 font-medium">Nama Perusahaan</label>
+                                <input
+                                    type="text"
+                                    className="w-full sm:w-2/3 p-2 border border-gray-300 rounded focus:ring focus:ring-blue-300"
+                                    name="name"
+                                    value={experience.name}
+                                    onChange={e => handleChange(e, 'experiences', idx)}
+                                    required
+                                />
+                            </div>
+                            <div className="my-4 flex flex-col sm:flex-row gap-y-2 sm:gap-y-0 items-start sm:items-center">
+                                <label className="w-full sm:w-1/3 font-medium">Bidang Usaha</label>
+                                <input
+                                    type="text"
+                                    className="w-full sm:w-2/3 p-2 border border-gray-300 rounded focus:ring focus:ring-blue-300"
+                                    name="industry"
+                                    value={experience.industry}
+                                    onChange={e => handleChange(e, 'experiences', idx)}
+                                    required
+                                />
+                            </div>
+                            <div className="my-4 flex flex-col sm:flex-row gap-y-2 sm:gap-y-0 items-start sm:items-center">
+                                <label className="w-full sm:w-1/3 font-medium">Jabatan Terakhir</label>
+                                <input
+                                    type="text"
+                                    className="w-full sm:w-2/3 p-2 border border-gray-300 rounded focus:ring focus:ring-blue-300"
+                                    name="position"
+                                    value={experience.position}
+                                    onChange={e => handleChange(e, 'experiences', idx)}
+                                    required
+                                />
+                            </div>
+                            <div className="my-4 flex flex-col sm:flex-row gap-y-2 sm:gap-y-0 items-start sm:items-center">
+                                <label className="w-full sm:w-1/3 font-medium">Gaji Terakhir</label>
+                                <div className="w-full sm:w-2/3 flex">
+                                    <span className="bg-gray-200 text-gray-700 px-3 py-2 rounded-l">Rp.</span>
+                                    <input
+                                        type="number"
+                                        className="w-full p-2 border border-gray-300 rounded-r focus:ring focus:ring-blue-300"
+                                        name="salary"
+                                        value={experience.salary}
+                                        onChange={e => handleChange(e, 'experiences', idx)}
+                                        required
+                                    />
+                                </div>
+                            </div>
+                            <div className="my-4 flex flex-col sm:flex-row gap-y-2 sm:gap-y-0 items-start sm:items-center">
+                                <label className="w-full sm:w-1/3 font-medium">Nama Atasan</label>
+                                <input
+                                    type="text"
+                                    className="w-full sm:w-2/3 p-2 border border-gray-300 rounded focus:ring focus:ring-blue-300"
+                                    name="supervisor"
+                                    value={experience.supervisor}
+                                    onChange={e => handleChange(e, 'experiences', idx)}
+                                    required
+                                />
+                            </div>
+                            <div className="my-4 flex flex-col sm:flex-row gap-y-2 sm:gap-y-0 items-start sm:items-center">
+                                <label className="w-full sm:w-1/3 font-medium">Jumlah Bawahan</label>
+                                <input
+                                    type="number"
+                                    className="w-full sm:w-2/3 p-2 border border-gray-300 rounded focus:ring focus:ring-blue-300"
+                                    name="subordinates"
+                                    value={experience.subordinates}
+                                    onChange={e => handleChange(e, 'experiences', idx)}
+                                    required
+                                />
+                            </div>
+                            <div className="my-4 flex flex-col sm:flex-row gap-y-2 sm:gap-y-0 items-start sm:items-center">
+                                <label className="w-full sm:w-1/3 font-medium">Masuk</label>
+                                <input
+                                    type="month"
+                                    className="w-full sm:w-2/3 p-2 border border-gray-300 rounded focus:ring focus:ring-blue-300"
+                                    name="start"
+                                    value={experience.start}
+                                    onChange={e => handleChange(e, 'experiences', idx)}
+                                    required
+                                />
+                            </div>
+                            <div className="my-4 flex flex-col sm:flex-row gap-y-2 sm:gap-y-0 items-start sm:items-center">
+                                <label className="w-full sm:w-1/3 font-medium">Keluar</label>
+                                <input
+                                    type="month"
+                                    className="w-full sm:w-2/3 p-2 border border-gray-300 rounded focus:ring focus:ring-blue-300"
+                                    name="end"
+                                    value={experience.end}
+                                    onChange={e => handleChange(e, 'experiences', idx)}
+                                    required
+                                />
+                            </div>
+                            <div className="my-4 flex flex-col sm:flex-row gap-y-2 sm:gap-y-0 items-start sm:items-center">
+                                <label className="w-full sm:w-1/3 font-medium">Uraian Tugas</label>
+                                <textarea
+                                    rows={7}
+                                    className="w-full sm:w-2/3 p-2 border border-gray-300 rounded focus:ring focus:ring-blue-300"
+                                    name="tasks"
+                                    value={experience.tasks}
+                                    onChange={e => handleChange(e, 'experiences', idx)}
+                                    required
+                                />
+                            </div>
+                            <div className="my-4 flex flex-col sm:flex-row gap-y-2 sm:gap-y-0 items-start sm:items-center">
+                                <label className="w-full sm:w-1/3 font-medium">Prestasi Kerja / Pencapaian</label>
+                                <textarea
+                                    rows={7}
+                                    className="w-full sm:w-2/3 p-2 border border-gray-300 rounded focus:ring focus:ring-blue-300"
+                                    name="achievement"
+                                    value={experience.achievement}
+                                    onChange={e => handleChange(e, 'experiences', idx)}
+                                    required
+                                />
+                            </div>
+                            <div className="my-4 flex flex-col sm:flex-row gap-y-2 sm:gap-y-0 items-start sm:items-center">
+                                <label className="w-full sm:w-1/3 font-medium">Alasan Meninggalkan Perusahaan</label>
+                                <input
+                                    type="text"
+                                    className="w-full sm:w-2/3 p-2 border border-gray-300 rounded focus:ring focus:ring-blue-300"
+                                    name="reason"
+                                    value={experience.reason}
+                                    onChange={e => handleChange(e, 'experiences', idx)}
+                                    required
+                                />
+                            </div>
+                        </div>
+                    ))}
                 </form>
             </main>
         </>

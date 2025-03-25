@@ -27,6 +27,7 @@ export interface Experiences {
     start: string
     end: string
     tasks: string
+    achievement: string
     reason: string
 }
 export interface Organizations {
@@ -104,6 +105,7 @@ const initialState: State = {
             start: '',
             end: '',
             tasks: '',
+            achievement: '',
             reason: ''
         }
     ],
@@ -155,9 +157,13 @@ const App = createSlice({
         }>) => {
             if (key === 'families' && typeof idx === 'number') state.families[idx]![name as keyof Families] = String(value)
             else if (key === 'academics' && typeof idx === 'number') state.academics[idx]![name as keyof Academics] = String(value)
-            else state[name as keyof State] = typeof value === 'number' ? Number(value) : String(value)
+            else if (key === 'experiences' && typeof idx === 'number') {
+                const expKey = name as keyof Experiences
+                if (expKey === 'salary' || expKey === 'subordinates') state.experiences[idx]![expKey] = Number(value)
+                else state.experiences[idx]![expKey] = String(value)
+            }
         },
-        add: <K extends keyof State>(state: State, { payload: { key, item } }: PayloadAction<{ key: K, item: Families | Academics }>) => {
+        add: <K extends keyof State>(state: State, { payload: { key, item } }: PayloadAction<{ key: K, item: Families | Academics | Experiences | Organizations | Recommendations | Emergencies }>) => {
             (state[key] as Array<typeof item>).push(item)
         },
         remove: <K extends keyof State>(state: State, { payload: { key, idx } }: PayloadAction<{ key: K, idx: number }>) => {
