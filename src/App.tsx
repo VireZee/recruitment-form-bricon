@@ -335,7 +335,7 @@ const App: React.FC = () => {
                             {appState.families.length > 1 && (
                                 <button
                                     type="button"
-                                    className="bg-red-500 text-white px-3 py-2 rounded hover:bg-red-600 transition duration-200 text-sm"
+                                    className="bg-red-500 text-white px-3 py-2 rounded hover:bg-red-600 transition duration-200"
                                     onClick={() => removeItemHandler('families', idx)}
                                 >
                                     Hapus
@@ -420,7 +420,7 @@ const App: React.FC = () => {
                             {appState.academics.length > 1 && (
                                 <button
                                     type="button"
-                                    className="bg-red-500 text-white px-3 py-2 rounded hover:bg-red-600 transition duration-200 text-sm"
+                                    className="bg-red-500 text-white px-3 py-2 rounded hover:bg-red-600 transition duration-200"
                                     onClick={() => removeItemHandler('academics', idx)}
                                 >
                                     Hapus
@@ -566,8 +566,28 @@ const App: React.FC = () => {
                                     required
                                 />
                             </div>
+                            {appState.experiences.length > 1 && (
+                                <div className="flex justify-center my-4">
+                                    <button
+                                        type="button"
+                                        className="bg-red-500 text-white px-3 py-2 rounded hover:bg-red-600 transition duration-200"
+                                        onClick={() => removeItemHandler('experiences', idx)}
+                                    >
+                                        Hapus
+                                    </button>
+                                </div>
+                            )}
                         </div>
                     ))}
+                    <div className="flex justify-center sm:justify-end my-3">
+                        <button
+                            type="button"
+                            className="bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600 transition duration-200"
+                            onClick={() => handleAdd('experiences')}
+                        >
+                            Tambah
+                        </button>
+                    </div>
                 </form>
             </main>
         </>
