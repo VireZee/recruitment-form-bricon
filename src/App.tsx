@@ -732,6 +732,63 @@ const App: React.FC = () => {
                             Tambah
                         </button>
                     </div>
+                    <h2 className="text-[21px] text-white py-1.5 px-4 bg-[#337ab7] border border-[#2e6da4]">
+                        VII. KONTAK DARURAT
+                    </h2>
+                    {appState.emergencies.map((emergency: Emergencies, idx: number) => (
+                        <div key={idx} className="flex flex-col sm:flex-row gap-3 my-4">
+                            <input
+                                type="text"
+                                className="w-full sm:w-1/3 p-2 border border-gray-300 rounded focus:ring focus:ring-blue-300"
+                                name="name"
+                                value={emergency.name}
+                                placeholder="Nama"
+                                onChange={e => handleChange(e, 'emergencies', idx)}
+                                required
+                            />
+                            <input
+                                type="text"
+                                className="w-full sm:w-1/3 p-2 border border-gray-300 rounded focus:ring focus:ring-blue-300"
+                                name="relation"
+                                value={emergency.relation}
+                                placeholder="Hubungan"
+                                onChange={e => handleChange(e, 'emergencies', idx)}
+                                required
+                            />
+                            <div className="w-full sm:w-1/3 flex">
+                                <span className="bg-gray-200 text-gray-700 px-3 py-2 rounded-l">+62</span>
+                                <input
+                                    type="tel"
+                                    className="w-full p-2 border border-gray-300 rounded-r focus:ring focus:ring-blue-300"
+                                    name="phone"
+                                    value={emergency.phone}
+                                    placeholder="No. Telepon / HP"
+                                    onChange={e => handleChange(e, 'emergencies', idx)}
+                                    required
+                                />
+                            </div>
+                            {appState.emergencies.length > 1 && (
+                                <div className="flex justify-center">
+                                    <button
+                                        type="button"
+                                        className="bg-red-500 text-white px-3 py-2 rounded hover:bg-red-600 transition duration-200"
+                                        onClick={() => removeItemHandler('emergencies', idx)}
+                                    >
+                                        Hapus
+                                    </button>
+                                </div>
+                            )}
+                        </div>
+                    ))}
+                    <div className="flex justify-center sm:justify-end my-3">
+                        <button
+                            type="button"
+                            className="bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600 transition duration-200"
+                            onClick={() => handleAdd('emergencies')}
+                        >
+                            Tambah
+                        </button>
+                    </div>
                 </form>
             </main>
         </>
