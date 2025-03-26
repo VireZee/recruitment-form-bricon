@@ -166,7 +166,7 @@ const App = createSlice({
             (state[key] as Array<typeof item>).push(item)
         },
         remove: <K extends keyof State>(state: State, { payload: { key, idx } }: PayloadAction<{ key: K, idx: number }>) => {
-            (state[key] as Array<State[K] extends Array<infer U> ? U : never>).splice(idx, 1)
+            (state[key] as Array<Extract<State[K], unknown[]>[number]>).splice(idx, 1)
         },
         setLoading: (state, { payload }: PayloadAction<boolean>) => {
             state['loading'] = payload

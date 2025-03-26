@@ -1,3 +1,4 @@
+import type { ChangeEvent } from 'react'
 import React from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import type { RootState } from './store/index'
@@ -9,10 +10,24 @@ import './assets/styles/global.css'
 const App: React.FC = () => {
     const dispatch = useDispatch()
     const appState = useSelector((state: RootState) => state.APP)
-    const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>, key?: keyof State, idx?: number) => {
+    const handleChange = (e: ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>, key?: keyof State, idx?: number) => {
         const { name, value } = e.target
         if (key && typeof idx === 'number') dispatch(change({ key, idx, name, value }))
         else dispatch(change({ name, value }))
+    }
+    const handleFileChange = (e: ChangeEvent<HTMLInputElement>) => {
+        const file = e.target.files![0]
+        if (file!.size > 8388608) return alert('File tidak boleh lebih dari 8 MB!')
+        const reader = new FileReader()
+        reader.readAsArrayBuffer(file!)
+        reader.onload = () => {
+            const arrayBuffer = reader.result as ArrayBuffer
+            const uint8Array = new Uint8Array(arrayBuffer)
+            const hexArray = Array.from(uint8Array).map(byte => byte.toString(16).toUpperCase().padStart(2, '0')).join('')
+            if (hexArray.startsWith('255044462D')) return alert('File harus berupa PDF!')
+            else alert('File berhasil diunggah!')
+            return hexArray
+        }
     }
     const handleAdd = <K extends keyof State>(key: K) => {
         const items = {
@@ -61,7 +76,7 @@ const App: React.FC = () => {
                 relation: '',
                 phone: ''
             }
-        } as Record<K, Families | Academics | Experiences | Organizations | Recommendations | Emergencies>
+        } as Record<K, Extract<State[K], unknown[]>[number]>
         dispatch(add({ key, item: items[key] }))
     }
     const removeItemHandler = <K extends keyof State>(key: K, idx: number) => dispatch(remove({ key, idx }))
@@ -87,7 +102,7 @@ const App: React.FC = () => {
         try {
             // const response = await axios.post('http://odoobricon/API', formattedData)
             // console.log(response.data)
-            console.log(formattedData, typeof formattedData)
+            console.log(formattedData)
         } catch (err) {
             // const e = err as AxiosError<{ message: string }>
             // alert(`Terjadi Kesalahan: ${e.response!.data.message}`)
@@ -461,8 +476,9 @@ const App: React.FC = () => {
                                 onChange={e => handleChange(e, 'academics', idx)}
                                 required
                             >
-                                <option value="Lulus">Lulus</option>
-                                <option value="Tidak Lulus">Tidak Lulus</option>
+                                {['Lulus', 'Tidak Lulus'].map(remarks => (
+                                    <option key={remarks} value={remarks}>{remarks}</option>
+                                ))}
                             </select>
                             {appState.academics.length > 1 && (
                                 <div className="flex justify-center">
@@ -973,7 +989,7 @@ const App: React.FC = () => {
                             <input
                                 type="file"
                                 name="resume"
-                                onChange={handleChange}
+                                onChange={handleFileChange}
                                 required
                             />
                         </div>
