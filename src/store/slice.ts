@@ -47,7 +47,7 @@ export interface Emergencies {
     phone: string
 }
 export interface State {
-    [key: string]: string | number | Families[] | Academics[] | Experiences[] | Organizations[] | Recommendations[] | Emergencies[] | boolean
+    [key: string]: string | number | Families[] | Academics[] | Experiences[] | Organizations[] | Recommendations[] | Emergencies[]
     families: Families[]
     academics: Academics[]
     experiences: Experiences[]
@@ -138,12 +138,12 @@ const initialState: State = {
     availability: '',
     strengths: '',
     weaknesses: '',
-    degree: false,
-    partner: false,
-    shift: false,
-    relocation: false,
-    division_relocation: false,
-    business_trip: false
+    degree: '',
+    partner: '',
+    shift: '',
+    relocation: '',
+    division_relocation: '',
+    business_trip: ''
 }
 const App = createSlice({
     name: 'APP',
@@ -164,8 +164,9 @@ const App = createSlice({
             } else if (key === 'organizations' && typeof idx === 'number') state.organizations[idx]![name as keyof Organizations] = String(value)
             else if (key === 'recommendations' && typeof idx === 'number') state.recommendations[idx]![name as keyof Recommendations] = String(value)
             else if (key === 'emergencies' && typeof idx === 'number') state.emergencies[idx]![name as keyof Emergencies] = String(value)
+            else state[name as keyof State] = typeof value === 'number' ? Number(value) : String(value)
         },
-        add: <K extends keyof State>(state: State, { payload: { key, item } }: PayloadAction<{ key: K, item:  Extract<State[K], unknown[]>[number] }>) => {
+        add: <K extends keyof State>(state: State, { payload: { key, item } }: PayloadAction<{ key: K, item: Extract<State[K], unknown[]>[number] }>) => {
             (state[key] as Array<typeof item>).push(item)
         },
         remove: <K extends keyof State>(state: State, { payload: { key, idx } }: PayloadAction<{ key: K, idx: number }>) => {

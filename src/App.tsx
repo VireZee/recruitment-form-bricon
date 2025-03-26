@@ -64,6 +64,28 @@ const App: React.FC = () => {
         dispatch(add({ key, item: items[key] }))
     }
     const removeItemHandler = <K extends keyof State>(key: K, idx: number) => dispatch(remove({ key, idx }))
+    const submit = async (e: React.FormEvent) => {
+        e.preventDefault()
+        alert('Test')
+        // setLoading(true)
+        // const formattedData = {
+        //     ...formState,
+        //     telepon: formState.telepon.charAt(0) === '0' ? `+62${formState.telepon.substring(1)}` : `+62${formState.telepon}`,
+        //     darurat: formState.darurat.map((urgent: Urgents) => ({
+        //         ...urgent,
+        //         telepon: urgent.telepon.charAt(0) === '0' ? `+62${urgent.telepon.substring(1)}` : `+62${urgent.telepon}`
+        //     })),
+        // }
+        // try {
+        //     const res = await axios.post('https://odoocpm.com/API/Recruitment', formattedData)
+        //     alert(res.data.result.msg)
+        //     location.reload()
+        // } catch (e: any) {
+        //     alert(`Terjadi Kesalahan: ${e.response.data.result.msg}`)
+        // } finally {
+        //     setLoading(false)
+        // }
+    }
     return (
         <>
             <header className="bg-[linear-gradient(to_bottom,#213f99,#1f3785)] p-5 text-white">
@@ -76,7 +98,7 @@ const App: React.FC = () => {
                 </nav>
             </header>
             <main className="max-w-7xl mx-auto w-full py-5">
-                <form>
+                <form onSubmit={submit}>
                     <div className="mb-4 flex flex-col sm:flex-row items-start sm:items-center">
                         <label className="w-full sm:w-1/3 font-medium">Posisi Yang Dilamar</label>
                         <input
@@ -787,6 +809,171 @@ const App: React.FC = () => {
                             onClick={() => handleAdd('emergencies')}
                         >
                             Tambah
+                        </button>
+                    </div>
+                    <h2 className="text-[21px] text-white py-1.5 px-4 bg-[#337ab7] border border-[#2e6da4]">
+                        VIII. KETERANGAN TAMBAHAN
+                    </h2>
+                    <div className="my-4 flex flex-col sm:flex-row gap-y-2 sm:gap-y-0 items-start sm:items-center">
+                        <label className="w-full sm:w-1/3 font-medium">Soft Skill</label>
+                        <input
+                            type="text"
+                            className="w-full sm:w-2/3 p-2 border border-gray-300 rounded focus:ring focus:ring-blue-300"
+                            name="soft_skills"
+                            value={appState.soft_skills}
+                            onChange={handleChange}
+                            required
+                        />
+                    </div>
+                    <div className="my-4 flex flex-col sm:flex-row gap-y-2 sm:gap-y-0 items-start sm:items-center">
+                        <label className="w-full sm:w-1/3 font-medium">Pernah di rawat di rumah sakit? (Jika "Ya", kapan dan jenis penyakit apa)</label>
+                        <input
+                            type="text"
+                            className="w-full sm:w-2/3 p-2 border border-gray-300 rounded focus:ring focus:ring-blue-300"
+                            name="hospital"
+                            value={appState.hospital}
+                            onChange={handleChange}
+                            required
+                        />
+                    </div>
+                    <div className="my-4 flex flex-col sm:flex-row gap-y-2 sm:gap-y-0 items-start sm:items-center">
+                        <label className="w-full sm:w-1/3 font-medium">Ekspetasi gaji</label>
+                        <div className="w-full sm:w-2/3 flex">
+                            <span className="bg-gray-200 text-gray-700 px-3 py-2 rounded-l">Rp.</span>
+                            <input
+                                type="number"
+                                className="w-full p-2 border border-gray-300 rounded-r focus:ring focus:ring-blue-300"
+                                name="salary"
+                                value={appState.salary}
+                                onChange={handleChange}
+                                required
+                            />
+                        </div>
+                    </div>
+                    <div className="my-4 flex flex-col sm:flex-row gap-y-2 sm:gap-y-0 items-start sm:items-center">
+                        <label className="w-full sm:w-1/3 font-medium">Fasilitas yang diharapkan</label>
+                        <input
+                            type="text"
+                            className="w-full sm:w-2/3 p-2 border border-gray-300 rounded focus:ring focus:ring-blue-300"
+                            name="facility"
+                            value={appState.facility}
+                            onChange={handleChange}
+                            required
+                        />
+                    </div>
+                    <div className="my-4 flex flex-col sm:flex-row gap-y-2 sm:gap-y-0 items-start sm:items-center">
+                        <label className="w-full sm:w-1/3 font-medium">Kapan bisa mulai kerja</label>
+                        <input
+                            type="date"
+                            className="w-full sm:w-2/3 p-2 border border-gray-300 rounded focus:ring focus:ring-blue-300"
+                            name="availability"
+                            value={appState.availability}
+                            onChange={handleChange}
+                            required
+                        />
+                    </div>
+                    <div className="my-4 flex flex-col sm:flex-row gap-y-2 sm:gap-y-0 items-start sm:items-center">
+                        <label className="w-full sm:w-1/3 font-medium">Kelebihan</label>
+                        <textarea
+                            rows={3}
+                            className="w-full sm:w-2/3 p-2 border border-gray-300 rounded focus:ring focus:ring-blue-300"
+                            name="strengths"
+                            value={appState.strengths}
+                            onChange={handleChange}
+                            required
+                        />
+                    </div>
+                    <div className="my-4 flex flex-col sm:flex-row gap-y-2 sm:gap-y-0 items-start sm:items-center">
+                        <label className="w-full sm:w-1/3 font-medium">Kelemahan</label>
+                        <textarea
+                            rows={3}
+                            className="w-full sm:w-2/3 p-2 border border-gray-300 rounded focus:ring focus:ring-blue-300"
+                            name="weaknesses"
+                            value={appState.weaknesses}
+                            onChange={handleChange}
+                            required
+                        />
+                    </div>
+                    <div className="flex flex-col sm:flex-row my-4">
+                        <label className="w-full sm:w-1/3 font-medium">Bersedia menitipkan ijazah</label>
+                        <div className="w-full sm:w-2/3 flex gap-4">
+                            {['Ya', 'Tidak'].map(degree => (
+                                <label key={degree} className="flex items-center">
+                                    <input type="radio" className="mr-2" name="degree" value={degree} onChange={handleChange} required />
+                                    {degree}
+                                </label>
+                            ))}
+                        </div>
+                    </div>
+                    <div className="flex flex-col sm:flex-row my-4">
+                        <label className="w-full sm:w-1/3 font-medium">Bersedia digabungkan dengan perusahaan mitra</label>
+                        <div className="w-full sm:w-2/3 flex gap-4">
+                            {['Ya', 'Tidak'].map(partner => (
+                                <label key={partner} className="flex items-center">
+                                    <input type="radio" className="mr-2" name="partner" value={partner} onChange={handleChange} required />
+                                    {partner}
+                                </label>
+                            ))}
+                        </div>
+                    </div>
+                    <div className="flex flex-col sm:flex-row my-4">
+                        <label className="w-full sm:w-1/3 font-medium">Bersedia bekerja shift</label>
+                        <div className="w-full sm:w-2/3 flex gap-4">
+                            {['Ya', 'Tidak'].map(shift => (
+                                <label key={shift} className="flex items-center">
+                                    <input type="radio" className="mr-2" name="shift" value={shift} onChange={handleChange} required />
+                                    {shift}
+                                </label>
+                            ))}
+                        </div>
+                    </div>
+                    <div className="flex flex-col sm:flex-row my-4">
+                        <label className="w-full sm:w-1/3 font-medium">Bersedia dipindahkan ke divisi lain</label>
+                        <div className="w-full sm:w-2/3 flex gap-4">
+                            {['Ya', 'Tidak'].map(division_relocation => (
+                                <label key={division_relocation} className="flex items-center">
+                                    <input type="radio" className="mr-2" name="division_relocation" value={division_relocation} onChange={handleChange} required />
+                                    {division_relocation}
+                                </label>
+                            ))}
+                        </div>
+                    </div>
+                    <div className="flex flex-col sm:flex-row my-4">
+                        <label className="w-full sm:w-1/3 font-medium">Bersedia ditempatkan diluar kota</label>
+                        <div className="w-full sm:w-2/3 flex gap-4">
+                            {['Ya', 'Tidak'].map(relocation => (
+                                <label key={relocation} className="flex items-center">
+                                    <input type="radio" className="mr-2" name="relocation" value={relocation} onChange={handleChange} required />
+                                    {relocation}
+                                </label>
+                            ))}
+                        </div>
+                    </div>
+                    <div className="flex flex-col sm:flex-row my-4">
+                        <label className="w-full sm:w-1/3 font-medium">Bersedia melakukan perjalanan dinas keluar kota</label>
+                        <div className="w-full sm:w-2/3 flex gap-4">
+                            {['Ya', 'Tidak'].map(business_trip => (
+                                <label key={business_trip} className="flex items-center">
+                                    <input type="radio" className="mr-2" name="business_trip" value={business_trip} onChange={handleChange} required />
+                                    {business_trip}
+                                </label>
+                            ))}
+                        </div>
+                    </div>
+                    <div className="flex flex-col sm:flex-row my-4">
+                        <label className="w-full sm:w-1/3 font-medium">Upload CV / Resume</label>
+                        <div className="w-full sm:w-2/3 flex items-center gap-2">
+                            <input
+                                type="file"
+                                name="resume"
+                                onChange={handleChange}
+                                required
+                            />
+                        </div>
+                    </div>
+                    <div className="flex justify-center">
+                        <button type="submit" className="px-6 py-3 bg-blue-600 text-white text-lg font-semibold rounded-lg hover:bg-blue-700 transition">
+                            Submit
                         </button>
                     </div>
                 </form>
