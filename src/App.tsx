@@ -2,13 +2,14 @@ import React from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import type { RootState } from './store/index'
 import type { State, Families, Academics, Experiences, Organizations, Recommendations, Emergencies } from './store/Slice'
-import { change, add, remove } from './store/Slice'
+import { change, add, remove, setLoading } from './store/Slice'
+// import axios, { AxiosError } from 'axios'
 import './assets/styles/global.css'
 
 const App: React.FC = () => {
     const dispatch = useDispatch()
     const appState = useSelector((state: RootState) => state.APP)
-    const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>, key?: 'families' | 'academics' | 'experiences' | 'organizations' | 'recommendations' | 'emergencies', idx?: number) => {
+    const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>, key?: keyof State, idx?: number) => {
         const { name, value } = e.target
         if (key && typeof idx === 'number') dispatch(change({ key, idx, name, value }))
         else dispatch(change({ name, value }))
@@ -66,25 +67,34 @@ const App: React.FC = () => {
     const removeItemHandler = <K extends keyof State>(key: K, idx: number) => dispatch(remove({ key, idx }))
     const submit = async (e: React.FormEvent) => {
         e.preventDefault()
-        alert('Test')
-        // setLoading(true)
-        // const formattedData = {
-        //     ...formState,
-        //     telepon: formState.telepon.charAt(0) === '0' ? `+62${formState.telepon.substring(1)}` : `+62${formState.telepon}`,
-        //     darurat: formState.darurat.map((urgent: Urgents) => ({
-        //         ...urgent,
-        //         telepon: urgent.telepon.charAt(0) === '0' ? `+62${urgent.telepon.substring(1)}` : `+62${urgent.telepon}`
-        //     })),
-        // }
-        // try {
-        //     const res = await axios.post('https://odoocpm.com/API/Recruitment', formattedData)
-        //     alert(res.data.result.msg)
-        //     location.reload()
-        // } catch (e: any) {
-        //     alert(`Terjadi Kesalahan: ${e.response.data.result.msg}`)
-        // } finally {
-        //     setLoading(false)
-        // }
+        dispatch(setLoading(true))
+        const formatPhoneNumber = (phone: string) => {
+            const phoneRegex = phone.replace(/^[0+]+/, '')
+            return `+62${phoneRegex}`
+        }
+        const formattedData = {
+            ...appState,
+            phone: formatPhoneNumber(appState.phone),
+            recommendations: appState.recommendations.map((recommendation: Recommendations) => ({
+                ...recommendation,
+                phone: formatPhoneNumber(recommendation.phone)
+            })),
+            emergencies: appState.emergencies.map((emergency: Emergencies) => ({
+                ...emergency,
+                phone: formatPhoneNumber(emergency.phone)
+            }))
+        }
+        try {
+            // const response = await axios.post('http://odoobricon/API', formattedData)
+            // console.log(response.data)
+            console.log(formattedData, typeof formattedData)
+        } catch (err) {
+            // const e = err as AxiosError<{ message: string }>
+            // alert(`Terjadi Kesalahan: ${e.response!.data.message}`)
+            console.log(err)
+        } finally {
+            dispatch(setLoading(false))
+        }
     }
     return (
         <>
@@ -176,7 +186,6 @@ const App: React.FC = () => {
                             name="license_a"
                             value={appState.license_a}
                             onChange={handleChange}
-                            required
                         />
                     </div>
                     <div className="my-4 flex flex-col sm:flex-row items-start sm:items-center">
@@ -290,7 +299,6 @@ const App: React.FC = () => {
                                 name="height"
                                 value={appState.height}
                                 onChange={handleChange}
-                                required
                             />
                             <span className="bg-gray-200 text-gray-700 px-3 py-2 rounded-r">cm</span>
                         </div>
@@ -304,7 +312,6 @@ const App: React.FC = () => {
                                 name="weight"
                                 value={appState.weight}
                                 onChange={handleChange}
-                                required
                             />
                             <span className="bg-gray-200 text-gray-700 px-3 py-2 rounded-r">kg</span>
                         </div>
@@ -480,7 +487,7 @@ const App: React.FC = () => {
                         </button>
                     </div>
                     <h2 className="text-[21px] text-white py-1.5 px-4 bg-[#337ab7] border border-[#2e6da4]">
-                        IV. RIWAYAT PEKERJAAN
+                        IV. RIWAYAT PEKERJAAN / MAGANG KERJA
                     </h2>
                     {appState.experiences.map((experience: Experiences, idx: number) => (
                         <div key={idx}>
@@ -976,6 +983,11 @@ const App: React.FC = () => {
                             Submit
                         </button>
                     </div>
+                    {appState.loading && (
+                        <div className="fixed inset-0 flex items-center justify-center bg-opacity-30 backdrop-blur-xs">
+                            <div className="loader"></div>
+                        </div>
+                    )}
                 </form>
             </main>
         </>
